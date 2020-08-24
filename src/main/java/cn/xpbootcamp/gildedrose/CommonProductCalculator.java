@@ -8,30 +8,29 @@ public class CommonProductCalculator {
     public static final int COMMON_PRODUCT_DOUBLE_REDUCE_EVERY_DAY = COMMON_PRODUCT_REDUCE_EVERY_DAY * 2;
 
     public int calculateCommonProductQuality(int sellIn, int quality, int updatedSellIn) {
+        int commonQuality = getProductSellInQuality(sellIn, quality);
         int updatedQuality;
         int after_days = sellIn - updatedSellIn;
         int afterUpdateSellIn = sellIn - after_days;
-        if (sellIn > 0) {
-            //当前保质期大于0的情况
-            if (afterUpdateSellIn > 0) {
-                int needReduceQuality = after_days * COMMON_PRODUCT_REDUCE_EVERY_DAY;
-                updatedQuality = quality - needReduceQuality;
-            } else {
-                int needReduceQuality = sellIn * COMMON_PRODUCT_REDUCE_EVERY_DAY + afterUpdateSellIn * COMMON_PRODUCT_DOUBLE_REDUCE_EVERY_DAY;
-                updatedQuality = quality - needReduceQuality;
-            }
+        if (afterUpdateSellIn > 0) {
+            updatedQuality = commonQuality + afterUpdateSellIn * COMMON_PRODUCT_REDUCE_EVERY_DAY;
         } else {
-            //当前保质期小于0的情况
-            if (afterUpdateSellIn > 0) {
-                int needReduceQuality = -sellIn * COMMON_PRODUCT_DOUBLE_REDUCE_EVERY_DAY - afterUpdateSellIn * COMMON_PRODUCT_REDUCE_EVERY_DAY;
-                updatedQuality = quality - needReduceQuality;
-            } else {
-                int needReduceQuality = after_days * COMMON_PRODUCT_DOUBLE_REDUCE_EVERY_DAY;
-                updatedQuality = quality - needReduceQuality;
-            }
+            updatedQuality = commonQuality + afterUpdateSellIn * COMMON_PRODUCT_DOUBLE_REDUCE_EVERY_DAY;
         }
         return Math.min(Math.max(MIN_QUALITY, updatedQuality), MAX_QUALITY);
     }
 
+    /**
+     * 获取商品到保质期的quality
+     *
+     * @return 到保质期的quality
+     */
+    public int getProductSellInQuality(int sellIn, int quality) {
+        if (sellIn > 0) {
+            return quality - (sellIn * COMMON_PRODUCT_REDUCE_EVERY_DAY);
+        } else {
+            return quality + Math.abs(sellIn) * COMMON_PRODUCT_REDUCE_EVERY_DAY * 2;
+        }
+    }
 
 }

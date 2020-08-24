@@ -15,8 +15,8 @@ public class TicketCalculator {
 
     public int calculateBackstagePassQuality(int sellIn, int quality, int updatedSellIn) {
         int updatedQuality = 0;
-        int after_days = sellIn - updatedSellIn;
-        int afterUpdateSellIn = sellIn - after_days;
+        int afterDays = sellIn - updatedSellIn;
+        int afterUpdateSellIn = sellIn - afterDays;
         if (sellIn <= DAY_SPLIT_0) {
             //初始天数为负的情况,无法计算其他值
 
@@ -26,14 +26,14 @@ public class TicketCalculator {
             if (afterUpdateSellIn <= DAY_SPLIT_0) {
                 updatedQuality = MIN_QUALITY;
             } else if (afterUpdateSellIn <= DAY_SPLIT_5) {
-                int need_increase_quality = after_days * LESS_5_EVERY_DAY_ADD;
-                updatedQuality = quality + need_increase_quality;
+                int needIncreaseQuality = afterDays * LESS_5_EVERY_DAY_ADD;
+                updatedQuality = quality + needIncreaseQuality;
             } else if (afterUpdateSellIn <= DAY_SPLIT_10) {
-                int need_increase_quality = -(DAY_SPLIT_5 - sellIn) * LESS_5_EVERY_DAY_ADD - (sellIn - updatedSellIn - DAY_SPLIT_5) * LESS_10_EVERY_DAY_ADD;
-                updatedQuality = quality + need_increase_quality;
+                int needIncreaseQuality = -(DAY_SPLIT_5 - sellIn) * LESS_5_EVERY_DAY_ADD - (sellIn - updatedSellIn - DAY_SPLIT_5) * LESS_10_EVERY_DAY_ADD;
+                updatedQuality = quality + needIncreaseQuality;
             } else {
-                int need_increase_quality = -(DAY_SPLIT_5 - sellIn) * LESS_5_EVERY_DAY_ADD - (DAY_SPLIT_10 - DAY_SPLIT_5) * LESS_10_EVERY_DAY_ADD - (sellIn - updatedSellIn - DAY_SPLIT_10) * COMMON_EVERY_DAY_ADD;
-                updatedQuality = quality + need_increase_quality;
+                int needIncreaseQuality = -(DAY_SPLIT_5 - sellIn) * LESS_5_EVERY_DAY_ADD - (DAY_SPLIT_10 - DAY_SPLIT_5) * LESS_10_EVERY_DAY_ADD - (sellIn - updatedSellIn - DAY_SPLIT_10) * COMMON_EVERY_DAY_ADD;
+                updatedQuality = quality + needIncreaseQuality;
             }
         } else if (sellIn <= 10) {
 
