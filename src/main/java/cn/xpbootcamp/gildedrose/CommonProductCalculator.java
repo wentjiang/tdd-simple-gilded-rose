@@ -10,28 +10,28 @@ public class CommonProductCalculator {
     public int calculateCommonProductQuality(int sellIn, int quality, int updatedSellIn) {
         int updatedQuality;
         int after_days = sellIn - updatedSellIn;
+        int afterUpdateSellIn = sellIn - after_days;
         if (sellIn > 0) {
             //当前保质期大于0的情况
-            if (sellIn - after_days > 0) {
-                int need_reduce_quality = after_days * COMMON_PRODUCT_REDUCE_EVERY_DAY;
-                updatedQuality = quality - need_reduce_quality;
+            if (afterUpdateSellIn > 0) {
+                int needReduceQuality = after_days * COMMON_PRODUCT_REDUCE_EVERY_DAY;
+                updatedQuality = quality - needReduceQuality;
             } else {
-                int need_reduce_quality = sellIn * COMMON_PRODUCT_REDUCE_EVERY_DAY + Math.abs(sellIn - after_days) * COMMON_PRODUCT_DOUBLE_REDUCE_EVERY_DAY;
-                updatedQuality = quality - need_reduce_quality;
+                int needReduceQuality = sellIn * COMMON_PRODUCT_REDUCE_EVERY_DAY + afterUpdateSellIn * COMMON_PRODUCT_DOUBLE_REDUCE_EVERY_DAY;
+                updatedQuality = quality - needReduceQuality;
             }
         } else {
             //当前保质期小于0的情况
-            if (sellIn - after_days > 0) {
-                int need_reduce_quality = -sellIn * COMMON_PRODUCT_DOUBLE_REDUCE_EVERY_DAY - Math.abs(sellIn - after_days) * COMMON_PRODUCT_REDUCE_EVERY_DAY;
-                updatedQuality = quality - need_reduce_quality;
+            if (afterUpdateSellIn > 0) {
+                int needReduceQuality = -sellIn * COMMON_PRODUCT_DOUBLE_REDUCE_EVERY_DAY - afterUpdateSellIn * COMMON_PRODUCT_REDUCE_EVERY_DAY;
+                updatedQuality = quality - needReduceQuality;
             } else {
-                int need_reduce_quality = after_days * COMMON_PRODUCT_DOUBLE_REDUCE_EVERY_DAY;
-                updatedQuality = quality - need_reduce_quality;
+                int needReduceQuality = after_days * COMMON_PRODUCT_DOUBLE_REDUCE_EVERY_DAY;
+                updatedQuality = quality - needReduceQuality;
             }
         }
         return Math.min(Math.max(MIN_QUALITY, updatedQuality), MAX_QUALITY);
     }
-
 
 
 }

@@ -9,19 +9,31 @@ public class TicketCalculator {
     public static final int LESS_10_EVERY_DAY_ADD = 2;
     public static final int COMMON_EVERY_DAY_ADD = 1;
 
+    public static final int DAY_SPLIT_0 = 0;
+    public static final int DAY_SPLIT_5 = 5;
+    public static final int DAY_SPLIT_10 = 10;
+
     public int calculateBackstagePassQuality(int sellIn, int quality, int updatedSellIn) {
         int updatedQuality = 0;
-        int days = sellIn - updatedSellIn;
-        if (sellIn <= 0) {
+        int after_days = sellIn - updatedSellIn;
+        int afterUpdateSellIn = sellIn - after_days;
+        if (sellIn <= DAY_SPLIT_0) {
             //初始天数为负的情况,无法计算其他值
-            return 0;
-        } else if (sellIn <= 5) {
-            //当前天数在5以内的时候
-            if (days <= 5) {
 
-                updatedQuality = quality + days * LESS_5_EVERY_DAY_ADD;
-            } else if (days <= 10) {
-//                updatedQuality = quality - 5 *
+            updatedQuality = MIN_QUALITY;
+        } else if (sellIn <= DAY_SPLIT_5) {
+            //当前天数在5以内的时候
+            if (afterUpdateSellIn <= DAY_SPLIT_0) {
+                updatedQuality = MIN_QUALITY;
+            } else if (afterUpdateSellIn <= DAY_SPLIT_5) {
+                int need_increase_quality = after_days * LESS_5_EVERY_DAY_ADD;
+                updatedQuality = quality + need_increase_quality;
+            } else if (afterUpdateSellIn <= DAY_SPLIT_10) {
+                int need_increase_quality = -(DAY_SPLIT_5 - sellIn) * LESS_5_EVERY_DAY_ADD - (sellIn - updatedSellIn - DAY_SPLIT_5) * LESS_10_EVERY_DAY_ADD;
+                updatedQuality = quality + need_increase_quality;
+            } else {
+                int need_increase_quality = -(DAY_SPLIT_5 - sellIn) * LESS_5_EVERY_DAY_ADD - (DAY_SPLIT_10 - DAY_SPLIT_5) * LESS_10_EVERY_DAY_ADD - (sellIn - updatedSellIn - DAY_SPLIT_10) * COMMON_EVERY_DAY_ADD;
+                updatedQuality = quality + need_increase_quality;
             }
         } else if (sellIn <= 10) {
 
